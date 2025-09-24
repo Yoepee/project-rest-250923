@@ -1,11 +1,12 @@
 'use client'
 
+import { components } from '@/lib/backend/apiV1/schema'
 import { apiFetch } from '@/lib/backend/client'
-import { PostDto } from '@/types/post'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export default function Page() {
+    type PostDto = components['schemas']['PostDto']
     const [posts, setPosts] = useState<PostDto[] | null>(null)
 
     useEffect(() => {

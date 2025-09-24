@@ -1,6 +1,8 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 export const apiFetch = (url: string, options?: RequestInit) => {
+    options = options || {}
+    options.credentials = 'include'
     if (options?.body) {
         const headers = new Headers(options.headers || {})
 
