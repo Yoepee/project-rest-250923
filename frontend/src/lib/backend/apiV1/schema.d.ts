@@ -219,16 +219,16 @@ export interface components {
         };
         PostWithAuthorDto: {
             /** Format: int64 */
-            id?: number;
+            id: number;
             /** Format: date-time */
-            createDate?: string;
+            createDate: string;
             /** Format: date-time */
-            modifyDate?: string;
+            modifyDate: string;
             /** Format: int64 */
-            authorId?: number;
-            authorName?: string;
-            title?: string;
-            content?: string;
+            authorId: number;
+            authorName: string;
+            title: string;
+            content: string;
         };
         RsDataPostWithAuthorDto: {
             resultCode?: string;
@@ -240,13 +240,13 @@ export interface components {
         };
         PostCommentDto: {
             /** Format: int64 */
-            id?: number;
+            id: number;
             /** Format: date-time */
-            createDate?: string;
+            createDate: string;
             /** Format: date-time */
-            modifyDate?: string;
-            authorName?: string;
-            content?: string;
+            modifyDate: string;
+            authorName: string;
+            content: string;
         };
         RsDataPostCommentDto: {
             resultCode?: string;
@@ -302,13 +302,13 @@ export interface components {
         };
         PostDto: {
             /** Format: int64 */
-            id?: number;
+            id: number;
             /** Format: date-time */
-            createDate?: string;
+            createDate: string;
             /** Format: date-time */
-            modifyDate?: string;
-            title?: string;
-            content?: string;
+            modifyDate: string;
+            title: string;
+            content: string;
         };
         RsDataPostDto: {
             resultCode?: string;
