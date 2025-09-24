@@ -21,10 +21,14 @@ export default function Page({ params }: { params: Promise<{ id: number }> }) {
 
         apiFetch(`/api/v1/posts/${id}`, {
             method: 'DELETE',
-        }).then((data) => {
-            alert(data.msg)
-            router.replace('/posts')
         })
+            .then((data) => {
+                alert(data.msg)
+                router.replace('/posts')
+            })
+            .catch((error) => {
+                alert(`${error.resultCode}: ${error.msg}`)
+            })
     }
 
     const deletePostComment = (id: number, commentId: number) => {
@@ -32,15 +36,19 @@ export default function Page({ params }: { params: Promise<{ id: number }> }) {
 
         apiFetch(`/api/v1/posts/${id}/comments/${commentId}`, {
             method: 'DELETE',
-        }).then((data) => {
-            alert(data.msg)
-
-            if (postComments === null) return
-
-            setPostComments(
-                postComments.filter((comment) => comment.id !== commentId),
-            )
         })
+            .then((data) => {
+                alert(data.msg)
+
+                if (postComments === null) return
+
+                setPostComments(
+                    postComments.filter((comment) => comment.id !== commentId),
+                )
+            })
+            .catch((error) => {
+                alert(`${error.resultCode}: ${error.msg}`)
+            })
     }
 
     const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -66,14 +74,18 @@ export default function Page({ params }: { params: Promise<{ id: number }> }) {
             body: JSON.stringify({
                 content: contentInput.value,
             }),
-        }).then((data) => {
-            alert(data.msg)
-            contentInput.value = ''
-
-            if (postComments == null) return
-
-            setPostComments([...postComments, data.data])
         })
+            .then((data) => {
+                alert(data.msg)
+                contentInput.value = ''
+
+                if (postComments == null) return
+
+                setPostComments([...postComments, data.data])
+            })
+            .catch((error) => {
+                alert(`${error.resultCode}: ${error.msg}`)
+            })
     }
 
     useEffect(() => {
