@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Configuration
 public class BaseInitData {
-
     @Autowired
     @Lazy
     private BaseInitData self;
@@ -29,7 +28,7 @@ public class BaseInitData {
         return args -> {
             self.work1();
             self.work2();
-//            self.work3();
+            self.work3();
         };
 
     }
@@ -77,8 +76,9 @@ public class BaseInitData {
         post3.addComment(memberUser3,"댓글 3-2");
     }
 
+//    @Profile("dev")
     @Transactional
     public void work3() {
-
+        System.out.println("work3가 실행되었습니다.");
     }
 }

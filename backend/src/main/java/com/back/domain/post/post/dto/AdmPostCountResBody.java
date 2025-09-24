@@ -1,6 +1,8 @@
 package com.back.domain.post.post.dto;
 
+import jakarta.annotation.Nonnull;
+
 public record AdmPostCountResBody(
-        long all
+        @Nonnull long all
 ) {
 }

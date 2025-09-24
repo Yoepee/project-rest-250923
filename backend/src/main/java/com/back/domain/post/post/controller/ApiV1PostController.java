@@ -3,6 +3,7 @@ package com.back.domain.post.post.controller;
 import com.back.domain.member.member.entity.Member;
 import com.back.domain.post.post.dto.PostDto;
 import com.back.domain.post.post.dto.PostModifyReqBody;
+import com.back.domain.post.post.dto.PostWithAuthorDto;
 import com.back.domain.post.post.dto.PostWriteReqBody;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
@@ -30,23 +31,23 @@ public class ApiV1PostController {
     @Transactional(readOnly = true)
     @GetMapping
     @Operation(summary = "다건 조회")
-    public List<PostDto> getItems() {
+    public List<PostWithAuthorDto> getItems() {
 
         List<Post> items = postService.getList();
 
         return items
                 .stream()
-                .map(PostDto::new) // postDto 변환
+                .map(PostWithAuthorDto::new) // postDto 변환
                 .toList();
     }
 
     @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @Operation(summary = "단건 조회")
-    public PostDto getItem(@PathVariable Long id) {
+    public PostWithAuthorDto getItem(@PathVariable Long id) {
         Post item = postService.findById(id);
 
-        return new PostDto(item);
+        return new PostWithAuthorDto(item);
     }
 
     @Transactional
@@ -69,7 +70,7 @@ public class ApiV1PostController {
     @PostMapping
     @Transactional
     @Operation(summary = "작성")
-    public RsData<PostDto> write(
+    public RsData<PostWithAuthorDto> write(
             @Valid @RequestBody PostWriteReqBody reqBody
     ) {
 
@@ -79,7 +80,7 @@ public class ApiV1PostController {
         return new RsData<>(
                         "201-1",
                         "%d번 게시글이 생성되었습니다.".formatted(post.getId()),
-                        new PostDto(post)
+                        new PostWithAuthorDto(post)
                 );
     }
 
