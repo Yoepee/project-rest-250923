@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
 
+import useMember from "./_hooks/useMember";
+
 const ClientLayout = ({ children }: { children: React.ReactNode }) => {
+  const { logout } = useMember();
   return (
     <>
       <header>
@@ -14,6 +19,9 @@ const ClientLayout = ({ children }: { children: React.ReactNode }) => {
           <Link href="/members/login" className="p-2 rounded hover:bg-gray-100">
             로그인
           </Link>
+          <button onClick={logout} className="p-2 rounded hover:bg-gray-100">
+            로그아웃
+          </button>
         </nav>
       </header>
       <main className="flex-1 flex flex-col">{children}</main>
