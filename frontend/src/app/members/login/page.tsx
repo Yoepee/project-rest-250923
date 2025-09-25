@@ -1,9 +1,9 @@
 "use client";
 
-import useMember from "./_hooks/useMember";
+import useAuth from "@/app/_hooks/useAuth";
 
 export default function Page() {
-  const { login } = useMember();
+  const { login } = useAuth();
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
