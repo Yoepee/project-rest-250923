@@ -1,3 +1,5 @@
+"use client";
+
 import { components } from "@/global/backend/apiV1/schema";
 import client from "@/global/backend/client";
 import { useEffect, useState } from "react";

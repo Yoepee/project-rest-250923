@@ -1,3 +1,5 @@
+"use client";
+
 import useAuth from "@/global/auth/hooks/useAuth";
 
 export default function Page() {
