@@ -1,6 +1,6 @@
-import { useRouter } from "next/navigation";
+import client from "@/global/backend/client";
 
-import client from "@/lib/backend/client";
+import { useRouter } from "next/navigation";
 
 const useMember = () => {
   const router = useRouter();
