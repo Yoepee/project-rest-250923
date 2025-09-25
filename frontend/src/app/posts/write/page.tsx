@@ -1,11 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
-import client from "@/lib/backend/client";
+import usePost from "./_hooks/usePost";
 
 export default function Page() {
-  const router = useRouter();
+  const { writePost } = usePost();
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,22 +27,7 @@ export default function Page() {
       return;
     }
 
-    client
-      .POST(`/api/v1/posts`, {
-        body: {
-          title: titleInput.value,
-          content: contentInput.value,
-        },
-      })
-      .then((res) => {
-        if (res.error) {
-          alert(res.error.msg);
-          return;
-        }
-
-        alert(res.data.msg);
-        router.replace(`/posts/${res.data.data.id}`);
-      });
+    writePost(titleInput.value, contentInput.value);
   };
 
   return (

@@ -1,73 +1,22 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use } from "react";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-
-import client from "@/lib/backend/client";
 
 import { components } from "@/lib/backend/apiV1/schema";
 
-export default function Page({ params }: { params: Promise<{ id: number }> }) {
-  type PostDto = components["schemas"]["PostWithAuthorDto"];
-  type PostCommentDto = components["schemas"]["PostCommentDto"];
+import usePost from "./_hooks/usePost";
+import usePostComment from "./_hooks/usePostComment";
 
-  const [post, setPost] = useState<PostDto | null>(null);
-  const [postComments, setPostComments] = useState<PostCommentDto[] | null>(
-    null,
-  );
+export default function Page({ params }: { params: Promise<{ id: number }> }) {
+  type PostCommentDto = components["schemas"]["PostCommentDto"];
 
   const { id } = use(params);
 
-  const router = useRouter();
-
-  const deletePost = (id: number) => {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
-
-    client
-      .DELETE(`/api/v1/posts/{id}`, {
-        params: {
-          path: {
-            id,
-          },
-        },
-      })
-      .then((res) => {
-        if (res.error) {
-          alert(res.error.msg);
-          return;
-        }
-        alert(res.data?.msg);
-        router.replace("/posts");
-      });
-  };
-
-  const deletePostComment = (id: number, commentId: number) => {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
-
-    client
-      .DELETE(`/api/v1/posts/{postId}/comments/{id}`, {
-        params: {
-          path: {
-            postId: id,
-            id: commentId,
-          },
-        },
-      })
-      .then((res) => {
-        if (res.error) {
-          alert(res.error.msg);
-          return;
-        }
-
-        alert(res.data?.msg);
-        if (postComments === null) return;
-        setPostComments(
-          postComments.filter((comment) => comment.id !== commentId),
-        );
-      });
-  };
+  const { post, deletePost } = usePost(id);
+  const { postComments, writePostComment, deletePostComment } =
+    usePostComment(id);
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -84,75 +33,9 @@ export default function Page({ params }: { params: Promise<{ id: number }> }) {
       return;
     }
 
-    client
-      .POST(`/api/v1/posts/{postId}/comments`, {
-        params: {
-          path: {
-            postId: id,
-          },
-        },
-        body: {
-          content: contentInput.value,
-        },
-      })
-      .then((res) => {
-        if (res.error) {
-          alert(res.error.msg);
-          return;
-        }
-
-        alert(res.data.msg);
-        contentInput.value = "";
-
-        if (postComments == null) return;
-
-        setPostComments([...postComments, res.data.data]);
-      });
+    writePostComment(contentInput.value);
+    contentInput.value = "";
   };
-
-  useEffect(() => {
-    client.GET("/api/v1/posts/{id}", {
-      params: {
-        path: {
-          id,
-        },
-      },
-    });
-
-    client
-      .GET("/api/v1/posts/{id}", {
-        params: {
-          path: {
-            id,
-          },
-        },
-      })
-      .then((res) => {
-        if (res.error) {
-          alert(res.error.msg);
-          return;
-        }
-
-        setPost(res.data);
-      });
-
-    client
-      .GET("/api/v1/posts/{postId}/comments", {
-        params: {
-          path: {
-            postId: id,
-          },
-        },
-      })
-      .then((res) => {
-        if (res.error) {
-          alert(res.error.msg);
-          return;
-        }
-
-        setPostComments(res.data);
-      });
-  }, [id]);
 
   if (post === null) return <div>로딩중...</div>;
 
