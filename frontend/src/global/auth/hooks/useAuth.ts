@@ -9,6 +9,7 @@ const useAuth = () => {
 
   const router = useRouter();
   const [loginMember, setLoginMember] = useState<MemberDto | null>(null);
+  const isLogin = loginMember !== null;
 
   useEffect(() => {
     client.GET(`/api/v1/members/me`).then((res) => {
@@ -44,11 +45,18 @@ const useAuth = () => {
       }
 
       alert(res.data.msg);
+      setLoginMember(null);
       router.replace(`/posts`);
     });
   };
 
-  return { loginMember, login, logout };
+  if (isLogin) return { isLogin: true, loginMember, login, logout } as const;
+  return {
+    isLogin: false,
+    loginMember: null,
+    login,
+    logout,
+  } as const;
 };
 
 export default useAuth;

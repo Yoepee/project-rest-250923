@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 
-import useAuth from "./_hooks/useAuth";
+import useAuth from "../global/auth/hooks/useAuth";
 
 const ClientLayout = ({ children }: { children: React.ReactNode }) => {
-  const { loginMember, logout } = useAuth();
-  const isLogin = loginMember !== null;
+  const { isLogin, loginMember, logout } = useAuth();
 
   return (
     <>
