@@ -32,6 +32,30 @@ const usePost = (id: number) => {
       });
   }, [id]);
 
+  const editPost = (title: string, content: string) => {
+    client
+      .PUT(`/api/v1/posts/{id}`, {
+        params: {
+          path: {
+            id,
+          },
+        },
+        body: {
+          title,
+          content,
+        },
+      })
+      .then((res) => {
+        if (res.error) {
+          alert(res.error.msg);
+          return;
+        }
+
+        alert(res.data.msg);
+        router.replace(`/posts/${id}`);
+      });
+  };
+
   const deletePost = (id: number) => {
     if (!confirm("정말 삭제하시겠습니까?")) return;
 
@@ -53,7 +77,7 @@ const usePost = (id: number) => {
       });
   };
 
-  return { post, deletePost };
+  return { post, editPost, deletePost };
 };
 
 export default usePost;

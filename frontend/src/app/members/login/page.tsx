@@ -1,12 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
-import client from "@/lib/backend/client";
+import useMember from "./_hooks/useMember";
 
 export default function Page() {
-  const router = useRouter();
-
+  const { login } = useMember();
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -31,22 +28,7 @@ export default function Page() {
       return;
     }
 
-    client
-      .POST(`/api/v1/members/login`, {
-        body: {
-          username: usernameInput.value,
-          password: passwordInput.value,
-        },
-      })
-      .then((res) => {
-        if (res.error) {
-          alert(res.error.msg);
-          return;
-        }
-
-        alert(res.data.msg);
-        router.replace(`/posts`);
-      });
+    login(usernameInput.value, passwordInput.value);
   };
 
   return (

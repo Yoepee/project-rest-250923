@@ -29,32 +29,6 @@ const usePostComment = (id: number) => {
       });
   }, [id]);
 
-  const deletePostComment = (id: number, commentId: number) => {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
-
-    client
-      .DELETE(`/api/v1/posts/{postId}/comments/{id}`, {
-        params: {
-          path: {
-            postId: id,
-            id: commentId,
-          },
-        },
-      })
-      .then((res) => {
-        if (res.error) {
-          alert(res.error.msg);
-          return;
-        }
-
-        alert(res.data?.msg);
-        if (postComments === null) return;
-        setPostComments(
-          postComments.filter((comment) => comment.id !== commentId),
-        );
-      });
-  };
-
   const writePostComment = (content: string) => {
     client
       .POST(`/api/v1/posts/{postId}/comments`, {
@@ -78,6 +52,32 @@ const usePostComment = (id: number) => {
         if (postComments == null) return;
 
         setPostComments([...postComments, res.data.data]);
+      });
+  };
+
+  const deletePostComment = (id: number, commentId: number) => {
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+
+    client
+      .DELETE(`/api/v1/posts/{postId}/comments/{id}`, {
+        params: {
+          path: {
+            postId: id,
+            id: commentId,
+          },
+        },
+      })
+      .then((res) => {
+        if (res.error) {
+          alert(res.error.msg);
+          return;
+        }
+
+        alert(res.data?.msg);
+        if (postComments === null) return;
+        setPostComments(
+          postComments.filter((comment) => comment.id !== commentId),
+        );
       });
   };
 
