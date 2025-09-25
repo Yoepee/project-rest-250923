@@ -5,7 +5,7 @@ import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { apiFetch } from "@/lib/backend/client";
+import client from "@/lib/backend/client";
 
 import { components } from "@/lib/backend/apiV1/schema";
 
@@ -25,35 +25,47 @@ export default function Page({ params }: { params: Promise<{ id: number }> }) {
   const deletePost = (id: number) => {
     if (!confirm("정말 삭제하시겠습니까?")) return;
 
-    apiFetch(`/api/v1/posts/${id}`, {
-      method: "DELETE",
-    })
-      .then((data) => {
-        alert(data.msg);
-        router.replace("/posts");
+    client
+      .DELETE(`/api/v1/posts/{id}`, {
+        params: {
+          path: {
+            id,
+          },
+        },
       })
-      .catch((error) => {
-        alert(`${error.resultCode}: ${error.msg}`);
+      .then((res) => {
+        if (res.error) {
+          alert(res.error.msg);
+          return;
+        }
+        alert(res.data?.msg);
+        router.replace("/posts");
       });
   };
 
   const deletePostComment = (id: number, commentId: number) => {
     if (!confirm("정말 삭제하시겠습니까?")) return;
 
-    apiFetch(`/api/v1/posts/${id}/comments/${commentId}`, {
-      method: "DELETE",
-    })
-      .then((data) => {
-        alert(data.msg);
+    client
+      .DELETE(`/api/v1/posts/{postId}/comments/{id}`, {
+        params: {
+          path: {
+            postId: id,
+            id: commentId,
+          },
+        },
+      })
+      .then((res) => {
+        if (res.error) {
+          alert(res.error.msg);
+          return;
+        }
 
+        alert(res.data?.msg);
         if (postComments === null) return;
-
         setPostComments(
           postComments.filter((comment) => comment.id !== commentId),
         );
-      })
-      .catch((error) => {
-        alert(`${error.resultCode}: ${error.msg}`);
       });
   };
 
@@ -72,29 +84,74 @@ export default function Page({ params }: { params: Promise<{ id: number }> }) {
       return;
     }
 
-    apiFetch(`/api/v1/posts/${id}/comments`, {
-      method: "POST",
-      body: JSON.stringify({
-        content: contentInput.value,
-      }),
-    })
-      .then((data) => {
-        alert(data.msg);
+    client
+      .POST(`/api/v1/posts/{postId}/comments`, {
+        params: {
+          path: {
+            postId: id,
+          },
+        },
+        body: {
+          content: contentInput.value,
+        },
+      })
+      .then((res) => {
+        if (res.error) {
+          alert(res.error.msg);
+          return;
+        }
+
+        alert(res.data.msg);
         contentInput.value = "";
 
         if (postComments == null) return;
 
-        setPostComments([...postComments, data.data]);
-      })
-      .catch((error) => {
-        alert(`${error.resultCode}: ${error.msg}`);
+        setPostComments([...postComments, res.data.data]);
       });
   };
 
   useEffect(() => {
-    apiFetch(`/api/v1/posts/${id}`).then(setPost);
+    client.GET("/api/v1/posts/{id}", {
+      params: {
+        path: {
+          id,
+        },
+      },
+    });
 
-    apiFetch(`/api/v1/posts/${id}/comments`).then(setPostComments);
+    client
+      .GET("/api/v1/posts/{id}", {
+        params: {
+          path: {
+            id,
+          },
+        },
+      })
+      .then((res) => {
+        if (res.error) {
+          alert(res.error.msg);
+          return;
+        }
+
+        setPost(res.data);
+      });
+
+    client
+      .GET("/api/v1/posts/{postId}/comments", {
+        params: {
+          path: {
+            postId: id,
+          },
+        },
+      })
+      .then((res) => {
+        if (res.error) {
+          alert(res.error.msg);
+          return;
+        }
+
+        setPostComments(res.data);
+      });
   }, [id]);
 
   if (post === null) return <div>로딩중...</div>;

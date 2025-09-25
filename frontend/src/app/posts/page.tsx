@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import Link from "next/link";
 
-import { apiFetch } from "@/lib/backend/client";
+import client from "@/lib/backend/client";
 
 import { components } from "@/lib/backend/apiV1/schema";
 
@@ -14,11 +14,14 @@ export default function Page() {
 
   useEffect(() => {
     // (data) => setPosts(data) == setPosts
-    apiFetch("/api/v1/posts")
-      .then(setPosts)
-      .catch((error) => {
-        alert(`${error.resultCode}: ${error.msg}`);
-      });
+    client.GET("/api/v1/posts").then((res) => {
+      if (res.error) {
+        alert(res.error.msg);
+        return;
+      }
+
+      setPosts(res.data);
+    });
   }, []);
   if (posts === null) return <div>로딩중...</div>;
 
