@@ -2,13 +2,13 @@ package com.back.global.globalExceptionHandler;
 
 import com.back.global.exception.ServiceException;
 import com.back.global.rsData.RsData;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Comparator;
@@ -19,6 +19,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestControllerAdvice
+@ResponseStatus(NOT_FOUND)
 public class GlobalExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<RsData<Void>> handle(NoSuchElementException e) {
@@ -32,6 +33,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<RsData<Void>> handle(MethodArgumentNotValidException e) {
         String message = e.getBindingResult()
                 .getAllErrors()
@@ -52,6 +54,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<RsData<Void>> handle(HttpMessageNotReadableException e) {
 
         return new ResponseEntity<>(
@@ -62,16 +65,20 @@ public class GlobalExceptionHandler {
                 BAD_REQUEST
         );
     }
+
     @ExceptionHandler(ServiceException.class)
-    public RsData<Void> handle(ServiceException e, HttpServletResponse response) {
-        RsData<Void>  rsData = e.getRsData();
+    @ResponseStatus(BAD_REQUEST)
+    public ResponseEntity<RsData<Void>> handle(ServiceException e) {
+        RsData<Void> rsData = e.getRsData();
 
-        response.setStatus(rsData.statusCode());
-
-        return rsData;
+        return new ResponseEntity<>(
+                rsData,
+                ResponseEntity.status(rsData.statusCode()).build().getStatusCode()
+        );
     }
 
     @ExceptionHandler(MissingRequestHeaderException.class)
+    @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<RsData<Void>> handle(MissingRequestHeaderException e) {
 
         return new ResponseEntity<>(
