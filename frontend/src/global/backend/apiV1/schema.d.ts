@@ -266,6 +266,7 @@ export interface components {
             /** Format: date-time */
             modifyDate: string;
             nickname: string;
+            isAdmin: boolean;
         };
         RsDataMemberDto: {
             resultCode: string;
