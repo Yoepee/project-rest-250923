@@ -1,13 +1,12 @@
 "use client";
 
-import { AuthContext } from "@/app/ClientLayout";
+import { useAuthContext } from "@/global/auth/hooks/useAuth";
 import client from "@/global/backend/client";
-import { use } from "react";
 
 import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const authState = use(AuthContext);
+  const { setLoginMember } = useAuthContext();
   const router = useRouter();
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,7 +46,7 @@ export default function Page() {
         }
 
         alert(res.data.msg);
-        authState?.setLoginMember(res.data.data.item);
+        setLoginMember(res.data.data.item);
         router.replace(`/posts`);
       });
   };
