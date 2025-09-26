@@ -1,10 +1,15 @@
 "use client";
 
+import withLogin from "@/global/auth/hoc/withLogin";
 import { use } from "react";
 
 import usePost from "../_hooks/usePost";
 
-export default function Page({ params }: { params: Promise<{ id: number }> }) {
+export default withLogin(function Page({
+  params,
+}: {
+  params: Promise<{ id: number }>;
+}) {
   const { id } = use(params);
 
   const { post, editPost } = usePost(id);
@@ -61,4 +66,4 @@ export default function Page({ params }: { params: Promise<{ id: number }> }) {
       </form>
     </>
   );
-}
+});

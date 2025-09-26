@@ -1,8 +1,10 @@
 "use client";
 
+import withLogin from "@/global/auth/hoc/withLogin";
+
 import usePost from "./_hooks/usePost";
 
-export default function Page() {
+export default withLogin(function Page() {
   const { writePost } = usePost();
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,4 +54,4 @@ export default function Page() {
       </form>
     </>
   );
-}
+});

@@ -1,11 +1,12 @@
 "use client";
 
+import withLogin from "@/global/auth/hoc/withLogin";
 import { useAuthContext } from "@/global/auth/hooks/useAuth";
 import client from "@/global/backend/client";
 
 import { useRouter } from "next/navigation";
 
-export default function Page() {
+export default withLogin(function Page() {
   const { isLogin, setLoginMember } = useAuthContext();
   const router = useRouter();
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -77,4 +78,4 @@ export default function Page() {
       </form>
     </>
   );
-}
+});
