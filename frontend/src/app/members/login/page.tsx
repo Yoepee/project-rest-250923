@@ -1,9 +1,14 @@
 "use client";
 
-import useAuth from "@/global/auth/hooks/useAuth";
+import { AuthContext } from "@/app/ClientLayout";
+import client from "@/global/backend/client";
+import { use } from "react";
+
+import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const { login } = useAuth();
+  const authState = use(AuthContext);
+  const router = useRouter();
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -28,7 +33,23 @@ export default function Page() {
       return;
     }
 
-    login(usernameInput.value, passwordInput.value);
+    client
+      .POST(`/api/v1/members/login`, {
+        body: {
+          username: usernameInput.value,
+          password: passwordInput.value,
+        },
+      })
+      .then((res) => {
+        if (res.error) {
+          alert(res.error.msg);
+          return;
+        }
+
+        alert(res.data.msg);
+        authState?.setLoginMember(res.data.data.item);
+        router.replace(`/posts`);
+      });
   };
 
   return (

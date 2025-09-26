@@ -20,25 +20,6 @@ const useAuth = () => {
     });
   }, []);
 
-  const login = (username: string, password: string) => {
-    client
-      .POST(`/api/v1/members/login`, {
-        body: {
-          username,
-          password,
-        },
-      })
-      .then((res) => {
-        if (res.error) {
-          alert(res.error.msg);
-          return;
-        }
-
-        alert(res.data.msg);
-        router.replace(`/posts`);
-      });
-  };
-
   const logout = () => {
     client.DELETE(`/api/v1/members/logout`).then((res) => {
       if (res.error) {
@@ -52,11 +33,12 @@ const useAuth = () => {
     });
   };
 
-  if (isLogin) return { isLogin: true, loginMember, login, logout } as const;
+  if (isLogin)
+    return { isLogin: true, loginMember, setLoginMember, logout } as const;
   return {
     isLogin: false,
     loginMember: null,
-    login,
+    setLoginMember,
     logout,
   } as const;
 };
