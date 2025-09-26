@@ -12,6 +12,7 @@ const useAuth = () => {
   const router = useRouter();
   const [loginMember, setLoginMember] = useState<MemberDto | null>(null);
   const isLogin = loginMember !== null;
+  const isAdmin = isLogin && loginMember.isAdmin;
 
   useEffect(() => {
     client.GET(`/api/v1/members/me`).then((res) => {
@@ -34,9 +35,16 @@ const useAuth = () => {
   };
 
   if (isLogin)
-    return { isLogin: true, loginMember, setLoginMember, logout } as const;
+    return {
+      isLogin: true,
+      isAdmin,
+      loginMember,
+      setLoginMember,
+      logout,
+    } as const;
   return {
     isLogin: false,
+    isAdmin,
     loginMember: null,
     setLoginMember,
     logout,
