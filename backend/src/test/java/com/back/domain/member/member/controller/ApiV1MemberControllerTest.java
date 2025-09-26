@@ -165,7 +165,8 @@ public class ApiV1MemberControllerTest {
                     .andExpect(jsonPath("$.data.id").value(member.getId()))
                     .andExpect(jsonPath("$.data.createDate").value(Matchers.startsWith(member.getCreateDate().toString().substring(0, 25))))
                     .andExpect(jsonPath("$.data.modifyDate").value(Matchers.startsWith(member.getModifyDate().toString().substring(0, 25))))
-                    .andExpect(jsonPath("$.data.nickname").value(member.getNickname()));
+                    .andExpect(jsonPath("$.data.nickname").value(member.getNickname()))
+                    .andExpect(jsonPath("$.data.isAdmin").value(member.isAdmin()));
     }
 
 
