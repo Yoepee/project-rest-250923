@@ -1,13 +1,13 @@
 "use client";
 
-import withLogin from "@/global/auth/hoc/withLogin";
+import withLogout from "@/global/auth/hoc/withLogout";
 import { useAuthContext } from "@/global/auth/hooks/useAuth";
 import client from "@/global/backend/client";
 
 import { useRouter } from "next/navigation";
 
-export default withLogin(function Page() {
-  const { isLogin, setLoginMember } = useAuthContext();
+export default withLogout(function Page() {
+  const { setLoginMember } = useAuthContext();
   const router = useRouter();
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,8 +52,6 @@ export default withLogin(function Page() {
       });
   };
 
-  if (isLogin) return <>이미 로그인된 상태입니다.</>;
-
   return (
     <>
       <h1>로그인</h1>
@@ -74,6 +72,16 @@ export default withLogin(function Page() {
         />
         <button className="border p-2 rounded" type="submit">
           로그인
+        </button>
+        <button
+          className="border p-2 rounded"
+          type="button"
+          onClick={() => {
+            window.location.href =
+              "http://localhost:8080/oauth2/authorization/kakao";
+          }}
+        >
+          카카오 로그인
         </button>
       </form>
     </>
