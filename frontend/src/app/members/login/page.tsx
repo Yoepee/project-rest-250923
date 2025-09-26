@@ -6,7 +6,7 @@ import client from "@/global/backend/client";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const { setLoginMember } = useAuthContext();
+  const { isLogin, setLoginMember } = useAuthContext();
   const router = useRouter();
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,6 +50,8 @@ export default function Page() {
         router.replace(`/posts`);
       });
   };
+
+  if (isLogin) return <>이미 로그인된 상태입니다.</>;
 
   return (
     <>
