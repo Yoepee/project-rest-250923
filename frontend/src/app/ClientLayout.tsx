@@ -19,11 +19,17 @@ const ClientLayout = ({ children }: { children: React.ReactNode }) => {
           </Link>
           {isLogin ? (
             <>
+              <img
+                src={loginMember.profileImgUrl}
+                width="30"
+                alt=""
+                className="rounded-full object-cover aspect-[1/1]"
+              />
               <Link
                 href="/members/me"
                 className="p-2 rounded hover:bg-gray-100"
               >
-                {loginMember?.nickname}님
+                {loginMember.nickname}님
               </Link>
               <button
                 onClick={logout}
