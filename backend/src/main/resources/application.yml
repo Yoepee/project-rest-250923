@@ -72,3 +72,16 @@ custom:
     secretKey: ${CUSTOM__JWT_SECRETKEY}
   accessToken:
     expireSeconds: "#{60 * 10}"
+  notProdMembers:
+    - username: KAKAO__123132423
+      apiKey: kakao__1
+      nickname: 카카오소셜회원
+      profileImgUrl: https://picsum.photos/300/300
+    - username: GOOGLE__1123123123213132
+      apiKey: google__1
+      nickname: 구글소셜회원
+      profileImgUrl: https://picsum.photos/300/300
+    - username: NAVER__xzccxcqw123123
+      apiKey: naver__1
+      nickname: 네이버소셜회원
+      profileImgUrl: https://picsum.photos/300/300
