@@ -3,6 +3,7 @@ package com.back.domain.member.member.service;
 import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.repository.MemberRepository;
 import com.back.global.exception.ServiceException;
+import com.back.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,20 @@ public class MemberService {
 
         password = passwordEncoder.encode(password);
 
-        Member member = new Member(username, password, nickname);
+        Member member = new Member(username, password, nickname, null);
+
+        return memberRepository.save(member);
+    }
+
+    public Member join(String username, String password, String nickname, String profileImgUrl) {
+        memberRepository.findByUsername(username)
+                .ifPresent(_member -> {
+                    throw new ServiceException("409-1", "이미 존재하는 회원입니다.");
+                });
+
+        password = passwordEncoder.encode(password);
+
+        Member member = new Member(username, password, nickname, profileImgUrl);
 
         return memberRepository.save(member);
     }
@@ -63,5 +77,29 @@ public class MemberService {
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new ServiceException("401-1", "비밀번호가 일치 하지 않습니다.");
         }
+    }
+
+    public RsData<Member> modifyOrJoin(String username, String password, String nickname, String profileImgUrl) {
+        Member member = findByUsername(username).orElse(null);
+        if(member == null){
+            member = join(username, password, nickname, profileImgUrl);
+
+            return new RsData<>(
+                    "201-1",
+                    "%s님 환영합니다. 회원가입이 완료되었습니다.".formatted(member.getNickname()),
+                    member
+            );
+        }
+
+        modify(member, nickname, profileImgUrl);
+        return new RsData<>(
+                "200-1",
+                "회원 정보가 수정되었습니다.",
+                member
+        );
+    }
+
+    public void modify(Member member, String nickname, String profileImgUrl) {
+        member.modifyNicknameAndProfileImgUrl(nickname, profileImgUrl);
     }
 }

@@ -6,7 +6,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.Synchronized;
+import lombok.SneakyThrows;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -83,13 +83,9 @@ public class Rq {
         resp.addCookie(cookie);
     }
 
-    @Synchronized
+    @SneakyThrows
     public void sendRedirect(String url) {
-        try {
-            resp.sendRedirect(url);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        resp.sendRedirect(url);
     }
 
     public void deleteCookie(String name) {
