@@ -9,10 +9,7 @@ import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @ToString
 @Entity
@@ -72,5 +69,9 @@ public class Member extends BaseEntity {
     public void modifyNicknameAndProfileImgUrl(String nickname, String profileImgUrl) {
         this.nickname = nickname;
         this.profileImgUrl = profileImgUrl;
+    }
+
+    public String getProfileImgUrl() {
+        return Objects.requireNonNullElse(this.profileImgUrl, "https://picsum.photos/id/237/200/300");
     }
 }
