@@ -15,6 +15,12 @@ export default withLogout(function Page() {
   const redirectUrl = encodeURIComponent(`${frontendBaseUrl}/members/me`);
   const kakaoLoginUrl = `${kakaoApiUrl}${redirectUrl ? `?redirectUrl=${redirectUrl}` : ""}`;
 
+  const getLoginUrl = (type: string) => {
+    const apiUrl = `${apiBaseUrl}/oauth2/authorization/${type}`;
+    const redirectUrl = encodeURIComponent(`${frontendBaseUrl}/members/me`);
+    return `${apiUrl}${redirectUrl ? `?redirectUrl=${redirectUrl}` : ""}`;
+  };
+
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -83,10 +89,19 @@ export default withLogout(function Page() {
           className="border p-2 rounded"
           type="button"
           onClick={() => {
-            window.location.href = `${kakaoLoginUrl}`;
+            window.location.href = `${getLoginUrl("kakao")}`;
           }}
         >
           카카오 로그인
+        </button>
+        <button
+          className="border p-2 rounded"
+          type="button"
+          onClick={() => {
+            window.location.href = `${getLoginUrl("google")}`;
+          }}
+        >
+          구글 로그인
         </button>
       </form>
     </>
