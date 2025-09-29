@@ -12,6 +12,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
@@ -28,6 +30,15 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
         rq.setCookie("apiKey", apiKey);
         rq.setCookie("accessToken", accessToken);
 
-        response.sendRedirect("http://localhost:3000");
+        String redicetUrl = "/";
+        String stateParam = request.getParameter("state");
+
+        if(stateParam != null) {
+            String decodedStateParam = new String(Base64.getUrlDecoder().decode(stateParam), StandardCharsets.UTF_8);
+
+            redicetUrl = decodedStateParam.split("#", 2)[0];
+        }
+
+        rq.sendRedirect(redicetUrl);
     }
 }
