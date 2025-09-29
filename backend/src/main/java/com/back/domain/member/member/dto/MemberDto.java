@@ -1,17 +1,16 @@
 package com.back.domain.member.member.dto;
 
 import com.back.domain.member.member.entity.Member;
-import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 
 public record MemberDto(
-        @NonNull long id,
-        @NonNull LocalDateTime createDate,
-        @NonNull LocalDateTime modifyDate,
-        @NonNull String nickname,
-        @NonNull boolean isAdmin,
-        @NonNull String profileImgUrl
+        long id,
+        LocalDateTime createDate,
+        LocalDateTime modifyDate,
+        String nickname,
+        boolean isAdmin,
+        String profileImgUrl
 ) {
     public MemberDto(Member member) {
         this(

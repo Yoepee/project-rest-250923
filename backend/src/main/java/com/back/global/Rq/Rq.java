@@ -1,6 +1,7 @@
 package com.back.global.Rq;
 
 import com.back.domain.member.member.entity.Member;
+import com.back.domain.member.member.service.MemberService;
 import com.back.global.security.SecurityUser;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class Rq {
     private final HttpServletRequest req;
     private final HttpServletResponse resp;
+    private final MemberService memberService;
 
     public Member getActor() {
         return Optional.ofNullable(
@@ -31,6 +33,16 @@ public class Rq {
                 .map(principal -> (SecurityUser) principal)
                 .map(securityUser -> new Member(securityUser.getId(), securityUser.getUsername(), securityUser.getNickname()))
                 .orElse(null);
+    }
+
+    public Member getActorFromDb() {
+        Member actor = getActor();
+
+        if (actor == null) {
+            return null;
+        }
+
+        return memberService.findById(actor.getId()).get();
     }
 
     public void setHeader(String name, String value) {
