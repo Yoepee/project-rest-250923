@@ -9,6 +9,12 @@ import { useRouter } from "next/navigation";
 export default withLogout(function Page() {
   const { setLoginMember } = useAuthContext();
   const router = useRouter();
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const frontendBaseUrl = process.env.NEXT_PUBLIC_FRONTEND_BASE_URL;
+  const kakaoApiUrl = `${apiBaseUrl}/oauth2/authorization/kakao`;
+  const redirectUrl = encodeURIComponent(`${frontendBaseUrl}/members/me`);
+  const kakaoLoginUrl = `${kakaoApiUrl}${redirectUrl ? `?redirectUrl=${redirectUrl}` : ""}`;
+
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -77,8 +83,7 @@ export default withLogout(function Page() {
           className="border p-2 rounded"
           type="button"
           onClick={() => {
-            window.location.href =
-              "http://localhost:8080/oauth2/authorization/kakao?redirectUrl=http://localhost:3000/members/me";
+            window.location.href = `${kakaoLoginUrl}`;
           }}
         >
           카카오 로그인
