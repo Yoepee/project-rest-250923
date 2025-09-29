@@ -16,25 +16,45 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberService memberService;
+
     // 소셜 로그인이 성공할 때 마다 함수가 실행됨
     @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String oauthUserId = oAuth2User.getName();
-        String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toLowerCase();
+        String oauthUserId = "";
+        String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
 
-        Map<String, Object> attributes = oAuth2User.getAttributes();
-        Map<String, Object> attributesProperties = (Map<String, Object>) attributes.get("properties");
+        String nickname = "";
+        String profileImgUrl = "";
 
-        String userNicknameAttributeName = "nickname";
-        String profileImgUrlAttributeName = "profile_image";
+        switch (providerTypeCode) {
+            case "KAKAO" -> {
+                oauthUserId = oAuth2User.getName();
 
-        String nickname = (String)attributesProperties.get(userNicknameAttributeName);
-        String profileImgUrl=(String)attributesProperties.get(profileImgUrlAttributeName);
+                Map<String, Object> attributes = oAuth2User.getAttributes();
+                Map<String, Object> attributesProperties = (Map<String, Object>) attributes.get("properties");
+
+                nickname = (String) attributesProperties.get("nickname");
+                profileImgUrl = (String) attributesProperties.get("profile_image");
+            }
+            case "GOOGLE" -> {
+                oauthUserId = oAuth2User.getName();
+                nickname = (String) oAuth2User.getAttributes().get("name");
+                profileImgUrl = (String) oAuth2User.getAttributes().get("picture");
+            }
+            case "NAVER" -> {
+                Map<String, Object> attributes = oAuth2User.getAttributes();
+                Map<String, Object> attributesProperties = (Map<String, Object>) attributes.get("response");
+
+                oauthUserId = (String) attributesProperties.get("id");
+                nickname = (String) attributesProperties.get("nickname");
+                profileImgUrl = (String) attributesProperties.get("profile_image");
+            }
+        }
+
         String username = providerTypeCode + "__%s".formatted(oauthUserId);
-
         String password = "";
 
         Member member = memberService.modifyOrJoin(username, password, nickname, profileImgUrl).data();
