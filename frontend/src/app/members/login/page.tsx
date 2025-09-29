@@ -11,9 +11,6 @@ export default withLogout(function Page() {
   const router = useRouter();
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const frontendBaseUrl = process.env.NEXT_PUBLIC_FRONTEND_BASE_URL;
-  const kakaoApiUrl = `${apiBaseUrl}/oauth2/authorization/kakao`;
-  const redirectUrl = encodeURIComponent(`${frontendBaseUrl}/members/me`);
-  const kakaoLoginUrl = `${kakaoApiUrl}${redirectUrl ? `?redirectUrl=${redirectUrl}` : ""}`;
 
   const getLoginUrl = (type: string) => {
     const apiUrl = `${apiBaseUrl}/oauth2/authorization/${type}`;
@@ -102,6 +99,15 @@ export default withLogout(function Page() {
           }}
         >
           구글 로그인
+        </button>
+        <button
+          className="border p-2 rounded"
+          type="button"
+          onClick={() => {
+            window.location.href = `${getLoginUrl("naver")}`;
+          }}
+        >
+          네이버 로그인
         </button>
       </form>
     </>
