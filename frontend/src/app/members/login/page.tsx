@@ -78,7 +78,7 @@ export default withLogout(function Page() {
           type="button"
           onClick={() => {
             window.location.href =
-              "http://localhost:8080/oauth2/authorization/kakao";
+              "http://localhost:8080/oauth2/authorization/kakao?redirectUrl=http://localhost:3000/members/me";
           }}
         >
           카카오 로그인
