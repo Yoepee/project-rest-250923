@@ -290,7 +290,7 @@ export interface components {
         };
         AdmPostCountResBody: {
             /** Format: int64 */
-            all?: number;
+            all: number;
         };
         MemberWithUsernameDto: {
             /** Format: int64 */
